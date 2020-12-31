@@ -1,0 +1,76 @@
+
+body{
+  background: linear-gradient(90deg, rgba(10, 7, 56, 1) 0%, rgba(0, 18, 97, 1) 0%, rgba(128, 188, 198, 1) 58%);
+}
+.head{
+  text-align: center;
+  color: white;
+  font-family: "Roboto", sans-serif;
+}
+.slider-container{
+  width: 750px;
+  overflow: hidden;
+  height: 500px;
+  border: black 5px solid;
+}
+.center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.navigation-bar{
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+.dot-button{
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  margin: 5px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+.dot-button:hover{
+  background: black;
+}
+
+input[name="radio-button"]{
+    position: absolute;
+    visibility: hidden;
+}
+
+.slides{
+  width: 500%;
+  height: 100%;
+  display: flex;
+}
+
+.slide{
+  width: 20%;
+  transition: 0.9s;
+}
+.slide img{
+  width: 100%;
+  height: 100%;
+}
+
+#radio-but-1:checked ~ .active-now{
+  margin-left: 0;
+}
+#radio-but-2:checked ~ .active-now{
+  margin-left: -20%;
+}
+#radio-but-3:checked ~ .active-now{
+  margin-left: -40%;
+}
+#radio-but-4:checked ~ .active-now{
+  margin-left: -60%;
+}
+#radio-but-5:checked ~ .active-now{
+  margin-left: -80%;
+}
