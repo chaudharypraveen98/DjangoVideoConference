@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Thread for {% if user != object.first %}{{ object.first }}{% else %}{{ object.second }}{% endif %}</h3>
+    <ul id='chat-items'>
+        {% for chat in object.chatmessage_set.all %}
+
+            <li>{{ chat.message }} via {{ chat.user }}</li>
+
+        {% endfor %}
+    </ul>
+
+    <form id='form' method='POST'> {% csrf_token %}
+        <input type="hidden" value="{{ user.username }}" id="myusername">
+        {{ form.as_p }}
+        <input type='submit' class='btn btn-primary'/>
+    </form>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        // websocket scripts
+        var loc = window.location;
+        var formData = $('#form');
+        var messageInput = $('#id_message');
+        var ulList = $('#chat-items');
+        var username = $('#myusername');
+        //we have define wsStart at different location because in production we have https server not http
+        var wsStart = 'ws://'
+        if (loc.protocol === "https:") {
+            var wsStart = 'wss://';
+        }
+        var endpoint = wsStart + loc.host + loc.pathname;
+        var socket = new WebSocket(endpoint);
+
+        socket.onmessage = function (e) {
+            console.log("message", e)
+            var messageData = JSON.parse(e.data)
+            ulList.append("<li>" + messageData.message + " via " + messageData.user + "</li>")
+
+        };
+        socket.onopen = function (e) {
+            console.log("open", e)
+            formData.submit(function (e) {
+                event.preventDefault()
+                var messageText = messageInput.val()
+                //ulList.append("<li>" + messageText + " via " + username.val() + "</li>")
+                messageInput.val('')
+                var formDictData = {
+                    'message': messageText
+                }
+                socket.send(JSON.stringify(formDictData))
+            })
+        };
+        socket.onerror = function (e) {
+            console.log("error", e)
+        };
+        socket.onclose = function (e) {
+            console.log("close", e)
+        };
+
+    </script>
+{% endblock %}
